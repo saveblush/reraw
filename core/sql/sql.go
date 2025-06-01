@@ -20,6 +20,7 @@ var (
 	defaultMaxIdleConns = 10
 	defaultMaxOpenConns = 30
 	defaultMaxLifetime  = time.Minute
+	defaultCharset      = "utf8mb4"
 )
 
 // gorm config
@@ -42,6 +43,8 @@ type Configuration struct {
 	Username     string
 	Password     string
 	DatabaseName string
+	Charset      string
+	Timezone     string
 	MaxIdleConns int
 	MaxOpenConns int
 	MaxLifetime  time.Duration
@@ -51,6 +54,23 @@ type Configuration struct {
 func InitConnection(cf *Configuration) (*Session, error) {
 	var db *gorm.DB
 	var err error
+
+	// check params config
+	if cf.Charset == "" {
+		cf.Charset = defaultCharset
+	}
+	if cf.Timezone == "" {
+		cf.Timezone = utils.TimeZone()
+	}
+	if cf.MaxIdleConns == 0 {
+		cf.MaxIdleConns = defaultMaxIdleConns
+	}
+	if cf.MaxOpenConns == 0 {
+		cf.MaxOpenConns = defaultMaxOpenConns
+	}
+	if cf.MaxLifetime == 0 {
+		cf.MaxLifetime = defaultMaxLifetime
+	}
 
 	// create database
 	err = createDatabase(cf)
@@ -65,7 +85,7 @@ func InitConnection(cf *Configuration) (*Session, error) {
 		cf.Host,
 		cf.Port,
 		cf.DatabaseName,
-		utils.TimeZone(),
+		cf.Timezone,
 	)
 	db, err = gorm.Open(postgres.New(postgres.Config{
 		DSN:                 dsn,
@@ -73,17 +93,6 @@ func InitConnection(cf *Configuration) (*Session, error) {
 	}), defaultConfig)
 	if err != nil {
 		return nil, err
-	}
-
-	// set config connection pool
-	if cf.MaxIdleConns > 0 {
-		cf.MaxIdleConns = defaultMaxIdleConns
-	}
-	if cf.MaxOpenConns > 0 {
-		cf.MaxOpenConns = defaultMaxOpenConns
-	}
-	if cf.MaxLifetime > 0 {
-		cf.MaxLifetime = defaultMaxLifetime
 	}
 
 	// connection pool
@@ -95,6 +104,11 @@ func InitConnection(cf *Configuration) (*Session, error) {
 	sqlDB.SetMaxIdleConns(cf.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(cf.MaxOpenConns)
 	sqlDB.SetConnMaxLifetime(cf.MaxLifetime)
+
+	fmt.Printf("%s \n", "--------------------------------------------------")
+	fmt.Printf("DB Stats [host: %s dbname: %s]\n", cf.Host, cf.DatabaseName)
+	fmt.Printf("MaxOpenConnections: %v\n", sqlDB.Stats().MaxOpenConnections)
+	fmt.Printf("%s \n\n", "--------------------------------------------------")
 
 	err = sqlDB.Ping()
 	if err != nil {

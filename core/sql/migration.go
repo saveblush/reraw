@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/saveblush/reraw/core/generic"
-	"github.com/saveblush/reraw/core/utils"
 	"github.com/saveblush/reraw/core/utils/logger"
 	"github.com/saveblush/reraw/models"
 )
@@ -19,7 +18,7 @@ func createDatabase(cf *Configuration) error {
 		cf.Password,
 		cf.Host,
 		cf.Port,
-		utils.TimeZone(),
+		cf.Timezone,
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

@@ -28,6 +28,7 @@ DATABASE:
     USERNAME: "user"
     PASSWORD: "password"
     DATABASE_NAME: "postgres"
+    TIMEZONE: "Asia/Bangkok"
     MAX_IDLE_CONNS: 5
     MAX_OPEN_CONNS: 8
     MAX_LIFE_TIME: 5m

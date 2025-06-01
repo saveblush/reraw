@@ -37,6 +37,7 @@ func main() {
 		Username:     config.CF.Database.RelaySQL.Username,
 		Password:     config.CF.Database.RelaySQL.Password,
 		DatabaseName: config.CF.Database.RelaySQL.DatabaseName,
+		Timezone:     config.CF.Database.RelaySQL.Timezone,
 		MaxIdleConns: config.CF.Database.RelaySQL.MaxIdleConns,
 		MaxOpenConns: config.CF.Database.RelaySQL.MaxOpenConns,
 		MaxLifetime:  config.CF.Database.RelaySQL.MaxLifetime,

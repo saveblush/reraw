@@ -39,6 +39,7 @@ type DatabaseConfig struct {
 	Username     string        `mapstructure:"USERNAME"`
 	Password     string        `mapstructure:"PASSWORD"`
 	DatabaseName string        `mapstructure:"DATABASE_NAME"`
+	Timezone     string        `mapstructure:"TIMEZONE"`
 	MaxIdleConns int           `mapstructure:"MAX_IDLE_CONNS"`
 	MaxOpenConns int           `mapstructure:"MAX_OPEN_CONNS"`
 	MaxLifetime  time.Duration `mapstructure:"MAX_LIFE_TIME"`
