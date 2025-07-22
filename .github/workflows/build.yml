@@ -26,12 +26,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
-      #- name: Install Go
-      #  uses: actions/setup-go@v5
-      #  with:
-      #    go-version-file: "./go.mod"
-
-      - name: Setup Go ${{ matrix.go-version }}
+      - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
@@ -39,17 +34,11 @@ jobs:
       - name: Display Go version
         run: go version
 
-      #- name: Run tests
-      #  run: go test -v ./...
-
-      - name: Install dependencies
-        run: go get .
-
       - name: Build
         run: go build -v ./...
 
       - name: Run tests
-        run: go test
+        run: go test -v ./...
 
       - name: Docker build
         if: github.actor != 'dependabot[bot]'
