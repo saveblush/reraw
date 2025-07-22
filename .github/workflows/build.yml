@@ -39,8 +39,17 @@ jobs:
       - name: Display Go version
         run: go version
 
+      #- name: Run tests
+      #  run: go test -v ./...
+
+      - name: Install dependencies
+        run: go get .
+
+      - name: Build
+        run: go build -v ./...
+
       - name: Run tests
-        run: go test -v ./...
+        run: go test
 
       - name: Docker build
         if: github.actor != 'dependabot[bot]'
