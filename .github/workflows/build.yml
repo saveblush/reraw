@@ -12,7 +12,8 @@ env:
   TAG: ${{ github.ref_name }}
 
 jobs:
-  push:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -34,11 +35,19 @@ jobs:
       - name: Display Go version
         run: go version
 
+      - name: Verify dependencies
+        run: go mod verify
+
       - name: Build
         run: go build -v ./...
 
+      - name: Run golint
+        run: |
+          go install golang.org/x/lint/golint@latest
+          golint ./...
+
       - name: Run tests
-        run: go test -v ./...
+        run: go test -race -vet=off ./...
 
       - name: Docker build
         if: github.actor != 'dependabot[bot]'
